@@ -1,0 +1,11 @@
+{
+  "name": "testlio-sms",
+  "version": "0.0.1",
+  "description": "AWS3 Lambda functions for sending SMS messages at Testlio",
+  "main": "index.js",
+  "author": "Denis Tuzhik <dentuzhik@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "twilio": "2.9.0"
+  }
+}

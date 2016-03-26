@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+  - "5.9.1"
+
+before_deploy:
+  - mkdir deploy
+  - zip -r testlio-sms.zip node_modules/ index.js
+  - mv testlio-sms.zip deploy
+
+deploy:
+  - provider: s3
+    skip_cleanup: true
+    region: eu-west-1
+    access_key_id: AKIAJUBFYFTHHILOUPMA
+    secret_access_key:
+      secure: ltIyfNwBvQ92BTPa0TlhRAoHaFDn6a8OmeebHqH8dn+DZvlZ1mebNcFF1oFYjTkNPjMTQdP+wMU/3Bh6xtgcL+ZNeVKtbT7CIO0rmMsoTvxDztEfWSt9YCAlYUyKtRNtqhaRxX/Z6hlF2j3SYfSPCa0RjLMwvmnZKXKO1yFVwYWEO/eQp+LuljeGm4aFulFKi8SCzaNi0JSgjIvEgnnxbNFkvcPm0vr8I2BiPISPfz1oFDIYNRJf0R4yHW600NxG9epO4scExMyNyVRCMtGQgMxQ1oXBh0Lhnb1tDpGyKBxhJe+KIqi6pidAazrN3oPO371b0Viv3Mm/XQnNaf62TiQg0Htx3DAN+69zh6WcA3kFBEaPz+oJrKNmV6D6UsnOAuQQ8w57TX5sG/azHpITz5HgXBQtfKzUAXXWpyi9rNCbgtbHft348yTwbmydozHBFgSollIYm2eKmoYOTO1NXP1KI66lzCzLZOafO9UymaMDd4irWNuvJdq9eva+0/VFfuiuo2xafKIZvAWcZzyRENOkZI2VTAZ/UPw5zFwA31GvQA6EPBE8AQ/Q7mINtCY7MO8DLrjswXSI4TGA7vfOlkQnskbKslp/W72SsFNlW+OPDvu9Y9HApcXRabJ7i/GeyzB+6HGmL5t12ZlvsHthHtX8nQQulzdKD4qL9tDTQOY=
+    bucket: testlio-sms
+    local-dir: deploy
+    acl: public_read_write
+    on:
+      repo: dentuzhik/testlio-sms
