@@ -4,7 +4,7 @@ node_js:
 
 before_deploy:
   - mkdir deploy
-  - zip -r testlio-sms.zip node_modules/ index.js
+  - zip -r testlio-sms.zip node_modules/ index.js aws-config.json
   - mv testlio-sms.zip deploy
 
 deploy:

@@ -6,7 +6,9 @@
   "author": "Denis Tuzhik <dentuzhik@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.6.1",
+    "async": "^2.0.0-rc.2",
+    "aws-sdk": "2.2.47",
+    "lodash": "4.6.1",
     "twilio": "2.9.0"
   }
 }

@@ -1,0 +1,10 @@
+{
+  "accessKeyId": "AKIAIDC6JPMMU6UKHIWA",
+  "secretAccessKey": "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",
+  "region": "eu-west-1",
+  "sslEnabled": true,
+  "maxRetries": 3,
+  "apiVersions": {
+    "sqs": "2012-11-05"
+  }
+}
