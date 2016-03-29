@@ -24,19 +24,6 @@ var pollTimes = [];
 // Timeout to start next poll in milliseconds
 var pollTimeout = 30 * 1000;
 
-function getAveragePollTime() {
-    if (_.isUndefined(prevPollStartTime)) return 0;
-
-    var currentPollTime = _.now() - prevPollStartTime - prevPollTimeoutTime;
-    pollTimes.push(currentPollTime);
-    console.log('Current poll time: %s ms', currentPollTime);
-
-    var meanPollTime = _.mean(pollTimes);
-    console.log('Current mean of poll times: %s ms', meanPollTime);
-
-    return meanPollTime;
-}
-
 function triggerPoll(context) {
     console.log('Trying to trigger poll of SQS queue');
 
@@ -51,6 +38,19 @@ function triggerPoll(context) {
     prevPollTimeoutTime = 0;
 
     doPoll();
+}
+
+function getAveragePollTime() {
+    if (_.isUndefined(prevPollStartTime)) return 0;
+
+    var currentPollTime = _.now() - prevPollStartTime - prevPollTimeoutTime;
+    pollTimes.push(currentPollTime);
+    console.log('Current poll time: %s ms', currentPollTime);
+
+    var meanPollTime = _.mean(pollTimes);
+    console.log('Current mean of poll times: %s ms', meanPollTime);
+
+    return meanPollTime;
 }
 
 function doPoll() {
@@ -70,12 +70,17 @@ function handleSQSResponse(err, response) {
 
         async.each(response.Messages, processSQSMessage, function() {
             console.log('Successfully processed all SQS messages');
+            // Q: Probably we don't need to wait before triggering next poll, there might be delays if some of the
+            // requests to Twilio time out
             triggerPollBound();
         });
     // In case of empty response or error, wait before triggering next poll
     } else {
         console.log('Received empty response or error. Triggering poll in %s seconds', pollTimeout / 1000);
         prevPollTimeoutTime = pollTimeout;
+        // Q: Since we're still paying Amazon for waiting untill callback is scheduled, maybe it's unreasonable to wait
+        // at all.
+        // But if the number of SQS Gets is limited this might still make sence
         setTimeout(triggerPollBound, pollTimeout);
     }
 }
@@ -159,7 +164,7 @@ exports.handler = function(event, context) {
         context.invokedFunctionArn
     );
 
-    // Binding context to poll function so it can always
+    // Binding context to poll function so it can always access it
     triggerPollBound = triggerPoll.bind(null, context);
     // Start polling
     triggerPollBound();
